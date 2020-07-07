@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 //apply plugin: 'maven'
 
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.loe-mvvm'
+group='com.github.mvvm'
 
 android {
     compileSdkVersion 28
