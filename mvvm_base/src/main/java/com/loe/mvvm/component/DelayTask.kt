@@ -1,28 +1,26 @@
-package com.loe.test.component
+package com.loe.mvvm.component
 
 import android.os.Handler
 import android.os.Looper
 
-abstract class DelayTask(var delay: Long)
+abstract class DelayTask(var delay: Long = 0): Handler(Looper.getMainLooper())
 {
-    private val handler = Handler(Looper.getMainLooper())
-
     private var runnable = Runnable { this@DelayTask.run() }
 
     fun start()
     {
         if (delay == 0L)
         {
-            handler.post(runnable)
+            post(runnable)
         } else
         {
-            handler.postDelayed(runnable, delay)
+            postDelayed(runnable, delay)
         }
     }
 
     fun stop()
     {
-        handler.removeCallbacks(runnable)
+        removeCallbacks(runnable)
     }
 
     protected abstract fun run()

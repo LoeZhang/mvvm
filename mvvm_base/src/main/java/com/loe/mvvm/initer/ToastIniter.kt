@@ -1,6 +1,7 @@
 package com.loe.mvvm.initer
 
 import android.app.Activity
+import com.loe.mvvm.component.DefaultToast
 
 /**
  * Toast初始化器
@@ -10,7 +11,18 @@ import android.app.Activity
  */
 object ToastIniter
 {
-    var creater: ToastCreater<*>? = null
+    var creater: ToastCreater<*> = object : ToastCreater<DefaultToast>()
+    {
+        override fun create(activity: Activity): DefaultToast?
+        {
+            return DefaultToast(activity)
+        }
+
+        override fun onShow(toast: DefaultToast?, msg: CharSequence)
+        {
+            toast?.show(msg)
+        }
+    }
         private set
 
     fun init(creater: ToastCreater<*>)
@@ -45,10 +57,10 @@ abstract class ToastCreater<T>
  */
 class BaseToast(activity: Activity)
 {
-    private val toast = ToastIniter.creater?.create(activity)
+    private val toast = ToastIniter.creater.create(activity)
 
     fun show(msg: CharSequence)
     {
-        ToastIniter.creater?.toShow(toast, msg)
+        ToastIniter.creater.toShow(toast, msg)
     }
 }

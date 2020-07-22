@@ -1,6 +1,7 @@
 package com.loe.mvvm.initer
 
 import android.app.Activity
+import com.loe.mvvm.component.DefaultProgress
 
 /**
  * Loading初始化器
@@ -10,7 +11,29 @@ import android.app.Activity
  */
 object LoadingIniter
 {
-    var creater: LoadingCreater<*>? = null
+    var creater: LoadingCreater<*> = object : LoadingCreater<DefaultProgress>()
+    {
+        override fun create(activity: Activity): DefaultProgress?
+        {
+            return DefaultProgress(activity)
+        }
+
+        override fun onShow(loading: DefaultProgress?, msg: CharSequence)
+        {
+            if (msg.isEmpty())
+            {
+                loading?.show()
+            } else
+            {
+                loading?.show(msg.toString())
+            }
+        }
+
+        override fun onCancel(loading: DefaultProgress?)
+        {
+            loading?.cancel()
+        }
+    }
         private set
 
     fun init(creater: LoadingCreater<*>)
@@ -52,16 +75,16 @@ abstract class LoadingCreater<T>
  */
 class BaseLoading(private val activity: Activity)
 {
-    private val loading = LoadingIniter.creater?.create(activity)
+    private val loading = LoadingIniter.creater.create(activity)
 
     fun show(msg: CharSequence = "")
     {
-        LoadingIniter.creater?.toShow(loading, msg)
+        LoadingIniter.creater.toShow(loading, msg)
     }
 
     fun cancel()
     {
-        LoadingIniter.creater?.toCancel(loading)
+        LoadingIniter.creater.toCancel(loading)
     }
 }
 

@@ -1,4 +1,4 @@
-package com.loe.test.component;
+package com.loe.mvvm.component;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,17 +8,17 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.loe.test.R;
+import com.loe.mvvm.R;
 
 /**
  * Created by zls on 2016/6/4.
  */
-public class AppProgress
+public class DefaultProgress
 {
     private String text = "加载中...";
     private AlertDialog dialog;
 
-    public AppProgress(Context context)
+    public DefaultProgress(Context context)
     {
         dialog = new AlertDialog.Builder(context).create();
     }
@@ -26,7 +26,7 @@ public class AppProgress
     /**
      * 给Dialog设置提示信息
      */
-    public AppProgress setText(String text)
+    public DefaultProgress setText(String text)
     {
         this.text = text;
         return this;
@@ -38,7 +38,7 @@ public class AppProgress
         {
             dialog.show();
             Window window = dialog.getWindow();
-            window.setContentView(R.layout.app_progress);
+            window.setContentView(R.layout.default_progress);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             ((TextView) window.findViewById(R.id.textView)).setText(text);
         }
@@ -50,7 +50,7 @@ public class AppProgress
         {
             dialog.show();
             Window window = dialog.getWindow();
-            window.setContentView(R.layout.app_progress);
+            window.setContentView(R.layout.default_progress);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             ((TextView) window.findViewById(R.id.textView)).setText(msg);
         }

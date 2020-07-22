@@ -1,4 +1,4 @@
-package com.loe.test.component;
+package com.loe.mvvm.component;
 
 import android.app.Activity;
 import android.graphics.PixelFormat;
@@ -12,13 +12,13 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
-import com.loe.test.R;
+import com.loe.mvvm.R;
 
 /**
  * App级别toast
  * （不受禁止通知影响）
  */
-public class AppToast
+public class DefaultToast
 {
     private Activity activity;
 
@@ -38,11 +38,11 @@ public class AppToast
     /**
      * APP级别Toast
      */
-    public AppToast(Activity activity)
+    public DefaultToast(Activity activity)
     {
         this.activity = activity;
 
-        layout = (ViewGroup) LayoutInflater.from(activity).inflate(R.layout.app_toast, null);
+        layout = (ViewGroup) LayoutInflater.from(activity).inflate(R.layout.default_toast, null);
         content = (ViewGroup) layout.getChildAt(0);
         textView = (TextView) content.getChildAt(0);
         params = new LayoutParams();
@@ -81,7 +81,7 @@ public class AppToast
             public void onAnimationEnd(Animation animation)
             {
                 layout.setVisibility(View.GONE);
-                AppToast.this.activity.getWindowManager().removeView(layout);
+                DefaultToast.this.activity.getWindowManager().removeView(layout);
             }
 
             @Override
