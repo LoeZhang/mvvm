@@ -1,5 +1,9 @@
 package com.loe.mvvm
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.os.Handler
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -13,6 +17,7 @@ import com.chad.library.adapter.base.listener.OnItemChildClickListener
 import com.chad.library.adapter.base.listener.OnItemChildLongClickListener
 import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.chad.library.adapter.base.listener.OnItemLongClickListener
+import kotlin.reflect.KClass
 
 /**
  * 绑定LiveData
@@ -173,4 +178,71 @@ fun <T> RecyclerView.setQuickAdapter(layoutId: Int, list: List<T> = ArrayList(),
         }
     }
     return adapter as BaseQuickAdapter<T, BaseViewHolder>
+}
+
+class XIntent(packageContext: Context?, cls: Class<*>?) : Intent(packageContext, cls)
+{
+    var onResult: ((ResultUtil.ResultBean) -> Unit)? = null
+    var onAfter: (() -> Unit)? = null
+    var isFinish = false
+}
+
+fun Intent.onResult(onResult:(ResultUtil.ResultBean) -> Unit): Intent
+{
+    if(this is XIntent) this.onResult = onResult
+    return this
+}
+
+fun Intent.onResultOk(onResult:(ResultUtil.ResultBean) -> Unit): Intent
+{
+    if(this is XIntent) this.onResult = { if(it.isOk()) onResult(it) }
+    return this
+}
+
+fun Intent.after(onAfter:() -> Unit): Intent
+{
+    if(this is XIntent) this.onAfter = onAfter
+    return this
+}
+
+fun Intent.afterFinish(onAfter:(() -> Unit)? = null): Intent
+{
+    if(this is XIntent)
+    {
+        this.onAfter = onAfter
+        this.isFinish = true
+    }
+    return this
+}
+
+fun Context?.start(cls: Class<out Activity>, delay: Long = 0): XIntent
+{
+    val intent = XIntent(this, cls)
+    Handler().postDelayed({
+        if(intent.onResult == null)
+        {
+            this?.startActivity(intent)
+        }else
+        {
+            if(this is FragmentActivity) ResultUtil.startResult(this, intent, intent.onResult)
+        }
+        if(intent.isFinish && this is Activity) finish()
+        intent.onAfter?.invoke()
+    }, delay)
+    return intent
+}
+
+fun Context?.start(kCls: KClass<out Activity>, delay: Long = 0): XIntent
+{
+    return start(kCls.java, delay)
+}
+
+fun Fragment?.start(cls: Class<out Activity>, delay: Long = 0): XIntent
+{
+    return this?.activity.start(cls, delay)
+}
+
+fun Fragment?.start(kCls: KClass<out Activity>, delay: Long = 0): XIntent
+{
+    return this?.activity.start(kCls, delay)
 }
