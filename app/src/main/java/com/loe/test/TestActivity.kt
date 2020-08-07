@@ -2,11 +2,11 @@ package com.loe.test
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.annotation.Keep
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.loe.mvvm.data.BaseDataActivity
 import com.loe.mvvm.ModelEvent
-import com.loe.mvvm.bind
 import kotlinx.android.synthetic.main.activity_model.*
 
 class TestActivity : BaseDataActivity<TestModel, TestData>()
@@ -24,7 +24,7 @@ class TestActivity : BaseDataActivity<TestModel, TestData>()
 
     private fun bindView()
     {
-        bind(model.singleData) { textSingle.text = "独立信息2222：$it" }
+        model.singleData.bind { textSingle.text = "独立信息2222：$it" }
     }
 
     override fun onData(data: TestData)
@@ -37,6 +37,12 @@ class TestActivity : BaseDataActivity<TestModel, TestData>()
     {
         recyclerView.layoutManager = LinearLayoutManager(activity) as RecyclerView.LayoutManager?
         recyclerView.adapter = model.adapter
+    }
+
+    @Keep
+    fun goHome()
+    {
+        toast("我是反射调用的方法！！！")
     }
 
     private fun initEvent()

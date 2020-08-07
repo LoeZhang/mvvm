@@ -32,18 +32,19 @@ class TestModel : BaseDataModel<TestData>()
 
     fun add()
     {
-        GlobalScope.launch()
-        {
-            showLoading("加载框文字...")
-            delay(2000)
-            data.age++
-            data.name = "name${data.age}"
-            data.money = data.age.toDouble() * 125
-            // data变动后需要调用update()更新
-            update()
-            cancelLoading()
-            toast("add成功")
-        }
+//        GlobalScope.launch()
+//        {
+//            showLoading("加载框文字...")
+//            delay(2000)
+//            data.age++
+//            data.name = "name${data.age}"
+//            data.money = data.age.toDouble() * 125
+//            // data变动后需要调用update()更新
+//            update()
+//            cancelLoading()
+//            toast("add成功")
+//        }
+        "goHome".invoke()
     }
 
     fun sub()

@@ -2,6 +2,8 @@ package com.loe.mvvm.component;
 
 import android.app.Activity;
 import android.graphics.PixelFormat;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -154,5 +156,49 @@ public class DefaultToast
     {
         content.startAnimation(endAnimation);
         isShow = false;
+    }
+
+    abstract class DelayTask extends Handler
+    {
+        private long delay = 0L;
+
+        public DelayTask(long delay)
+        {
+            super(Looper.getMainLooper());
+            this.delay = delay;
+        }
+
+        public DelayTask()
+        {
+            super(Looper.getMainLooper());
+        }
+
+        private Runnable runnable = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                DelayTask.this.run();
+            }
+        };
+
+        public void start()
+        {
+            if (delay == 0L)
+            {
+                post(runnable);
+            }
+            else
+            {
+                postDelayed(runnable, delay);
+            }
+        }
+
+        public void stop()
+        {
+            removeCallbacks(runnable);
+        }
+
+        protected abstract void run();
     }
 }

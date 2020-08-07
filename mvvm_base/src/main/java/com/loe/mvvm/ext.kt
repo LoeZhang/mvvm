@@ -19,39 +19,6 @@ import com.chad.library.adapter.base.listener.OnItemClickListener
 import com.chad.library.adapter.base.listener.OnItemLongClickListener
 import kotlin.reflect.KClass
 
-/**
- * 绑定LiveData
- */
-fun <T> FragmentActivity.bind(liveData: LiveData<T>, onBind: (data: T) -> Unit)
-{
-    liveData.observe(this, Observer<T>
-    {
-        if (it != null) onBind(it)
-    })
-}
-
-/**
- * 绑定LiveData
- */
-fun <T> Fragment.bind(liveData: LiveData<T>, onBind: (data: T) -> Unit)
-{
-    liveData.observe(viewLifecycleOwner, Observer<T>
-    {
-        if (it != null) onBind(it)
-    })
-}
-
-/**
- * 绑定LiveData
- */
-fun <T> LiveData<T>.bind(owner: LifecycleOwner, onBind: (data: T) -> Unit)
-{
-    observe(owner, Observer<T>
-    {
-        if (it != null) onBind(it)
-    })
-}
-
 fun RecyclerView.addOnItemClickListener(onClick: (i: Int) -> Unit)
 {
     this.addOnItemTouchListener(object : OnItemClickListener()

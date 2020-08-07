@@ -11,11 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.loe.mvvm.initer.BaseLoading
-import com.loe.mvvm.initer.BaseToast
-import com.loe.mvvm.initer.LoadingData
+import com.loe.mvvm.component.BaseLoading
+import com.loe.mvvm.component.BaseToast
+import com.loe.mvvm.component.LoadingData
 import java.lang.Exception
 import java.lang.reflect.ParameterizedType
 
@@ -134,6 +135,16 @@ abstract class BaseFragment<MODEL : BaseModel> : Fragment()
                     if (onEvent(it))
                     {
                         model.eventData.value = null
+                    }else
+                    // 反射调用遗落事件
+                    {
+                        if(it.data == "")
+                        {
+                            invoke(it.type)
+                        }else
+                        {
+                            invoke(it.type, it.data)
+                        }
                     }
                 }
             })
@@ -208,6 +219,39 @@ abstract class BaseFragment<MODEL : BaseModel> : Fragment()
     abstract fun getLayout(): Int
 
     abstract fun onCreated(savedInstanceState: Bundle?)
+
+    /**
+     * LiveData绑定View
+     */
+    fun <T> LiveData<T>.bind(onBind: (data: T) -> Unit)
+    {
+        observe(viewLifecycleOwner, Observer<T>
+        {
+            if (it != null) onBind(it)
+        })
+    }
+
+    /**
+     * 反射调用方法
+     */
+    fun invoke(name: String, vararg params: Any)
+    {
+        this::class.java.declaredMethods.forEach()
+        {
+            if (it.name == name)
+            {
+                try
+                {
+                    it.isAccessible = true
+                    it.invoke(this, *params)
+                    // 反射执行结束消耗掉事件，使其不再传递
+                    model.eventData.value = null
+                } catch (e: Exception)
+                {
+                }
+            }
+        }
+    }
 
     /************************ 实现model功能 **********************/
 

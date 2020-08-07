@@ -1,7 +1,6 @@
-package com.loe.mvvm.initer
+package com.loe.mvvm.component
 
 import android.app.Activity
-import com.loe.mvvm.component.DefaultProgress
 
 /**
  * Loading初始化器

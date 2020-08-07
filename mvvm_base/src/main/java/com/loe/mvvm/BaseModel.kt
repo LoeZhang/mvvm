@@ -2,7 +2,7 @@ package com.loe.mvvm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.loe.mvvm.initer.LoadingData
+import com.loe.mvvm.component.LoadingData
 
 /**
  * Model基类
@@ -56,6 +56,16 @@ open class BaseModel : ViewModel()
     fun postEvent(type: String, data: Any = "")
     {
         eventData.postValue(ModelEvent(type, data))
+    }
+
+    /**
+     * 简易事件，反射调用Activity、Fragment方法
+     * 基于postEvent事件实现
+     * @param data 执行方法的参数
+     */
+    fun String.invoke(data: Any = "")
+    {
+        postEvent(this, data)
     }
 
     /**
